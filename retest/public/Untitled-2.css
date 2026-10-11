@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YOLO Image Detection Upload</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    /* ---------------- BACKGROUND ANIMATION ---------------- */
+    .background-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .background-animation span {
+      position: absolute;
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: rgba(18, 140, 126, 0.15);
+      animation: animate 25s linear infinite;
+      bottom: -150px;
+    }
+
+    /* Different sizes and animation delays for randomness */
+    .background-animation span:nth-child(1){ left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+    .background-animation span:nth-child(2){ left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+    .background-animation span:nth-child(3){ left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+    .background-animation span:nth-child(4){ left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+    .background-animation span:nth-child(5){ left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+    .background-animation span:nth-child(6){ left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+    .background-animation span:nth-child(7){ left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+    .background-animation span:nth-child(8){ left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+    .background-animation span:nth-child(9){ left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+    .background-animation span:nth-child(10){ left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+    @keyframes animate {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+    }
+
+    /* ---------------- UPLOAD UI STYLING ---------------- */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      color: #1e293b;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    .header p {
+      color: #64748b;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .upload-area {
+      background: white;
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 60px 40px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .upload-area:hover {
+      border-color: #3b82f6;
+      background: #f8faff;
+    }
+
+    .upload-area.dragover {
+      border-color: #3b82f6;
+      background: #eff6ff;
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 20px;
+      opacity: 0.6;
+    }
+
+    .upload-text h3 {
+      color: #1e293b;
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+    }
+
+    .upload-text p {
+      color: #64748b;
+      font-size: 14px;
+      margin: 0 0 20px 0;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .browse-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .browse-btn:hover {
+      background: #2563eb;
+    }
+
+    .file-list {
+      margin-top: 30px;
+    }
+
+    .file-item {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .file-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+      opacity: 0.7;
+    }
+
+    .file-details h4 {
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 4px 0;
+    }
+
+    .file-details p {
+      color: #64748b;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .remove-btn:hover {
+      background: #fef2f2;
+    }
+
+    .upload-btn {
+      width: 100%;
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover {
+      background: #047857;
+    }
+
+    .upload-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 40px 16px;
+      }
+      .upload-area {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Animation -->
+  <div class="background-animation">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="container">
+    <header class="header">
+      <h1>YOLO Image Detection</h1>
+      <p>Upload an image to detect objects using your trained model</p>
+    </header>
+
+    <div class="upload-area" id="uploadArea">
+      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+      </svg>
+      <div class="upload-text">
+        <h3>Choose an image to detect</h3>
+        <p>PNG, JPG, GIF up to 10MB each</p>
+        <button type="button" class="browse-btn" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+      </div>
+      <input type="file" id="fileInput" class="file-input" accept="image" />
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+
+    <button type="button" class="upload-btn" id="uploadBtn" disabled onclick="uploadFiles()">Run Detection</button>
+
+    <div class="success-message" id="successMessage">✅ Detection completed successfully!</div>
+  </main>
+
+  <script>
+    const uploadArea = document.getElementById("uploadArea");
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const successMessage = document.getElementById("successMessage");
+
+    let selectedFiles = [];
+
+    uploadArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadArea.classList.add("dragover");
+    });
+
+    uploadArea.addEventListener("dragleave", () => {
+      uploadArea.classList.remove("dragover");
+    });
+
+    uploadArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove("dragover");
+      const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith("image/"));
+      addFiles(files);
+    });
+
+    uploadArea.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => addFiles(Array.from(e.target.files)));
+
+    function addFiles(files) {
+      selectedFiles = files.slice(0, 1);
+      updateFileList();
+      uploadBtn.disabled = selectedFiles.length === 0;
+    }
+
+    function updateFileList() {
+      fileList.innerHTML = "";
+      selectedFiles.forEach((file, index) => {
+        const item = document.createElement("div");
+        item.className = "file-item";
+        item.innerHTML = `
+          <div class="file-info">
+            <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+              </path>
+            </svg>
+            <div class="file-details">
+              <h4>${file.name}</h4>
+              <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            </div>
+          </div>
+          <button type="button" class="remove-btn" onclick="removeFile(${index})">✖</button>
+        `;
+        fileList.appendChild(item);
+      });
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      updateFileList();
+      uploadBtn.disabled = selectedFiles.length === 0;
+    }
+
+    async function uploadFiles() {
+      if (selectedFiles.length === 0) return;
+      uploadBtn.textContent = "Processing...";
+      uploadBtn.disabled = true;
+
+      const formData = new FormData();
+      formData.append("file", selectedFiles[0]);
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Failed to process image");
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const img = document.createElement("img");
+        img.src = url;
+        img.style.width = "100%";
+        img.style.marginTop = "20px";
+
+        fileList.innerHTML = "";
+        fileList.appendChild(img);
+
+        successMessage.style.display = "block";
+        setTimeout(() => (successMessage.style.display = "none"), 3000);
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+        uploadBtn.textContent = "Run Detection";
+        uploadBtn.disabled = false;
+        selectedFiles = [];
+      }
+    }
+  </script>
+</body>
+</html>
