@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicate | Intelligent Medical Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mint-50: #f4fbf7;
+            --mint-100: #e8f6ed;
+            --mint-200: #d6eee0;
+            --mint-300: #bfe2cf;
+            --mint-400: #80c5a1;
+            --mint-500: #39a96b;
+            --mint-600: #228b5c;
+            --mint-700: #166746;
+            --mint-800: #104c34;
+            --mint-900: #0b3323;
+            --white: #ffffff;
+            --text-strong: #17352b;
+            --text-soft: #5a7468;
+            --border: rgba(22, 103, 70, 0.14);
+            --shadow: 0 18px 50px rgba(20, 74, 50, 0.12);
+            --shadow-soft: 0 10px 24px rgba(20, 74, 50, 0.09);
+            --danger: #c45b53;
+            --success: #1d8f52;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            color: var(--text-strong);
+            background:
+                radial-gradient(circle at top left, rgba(138, 207, 169, 0.18), transparent 34%),
+                radial-gradient(circle at right, rgba(94, 176, 123, 0.18), transparent 28%),
+                linear-gradient(180deg, #f9fefb 0%, #edf8f1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .page-shell {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .page-shell::before,
+        .page-shell::after {
+            content: "";
+            position: fixed;
+            width: 28rem;
+            height: 28rem;
+            border-radius: 999px;
+            filter: blur(18px);
+            z-index: -2;
+            opacity: 0.55;
+        }
+
+        .page-shell::before {
+            top: -8rem;
+            left: -8rem;
+            background: rgba(138, 207, 169, 0.26);
+        }
+
+        .page-shell::after {
+            right: -10rem;
+            bottom: -10rem;
+            background: rgba(60, 153, 104, 0.16);
+        }
+
+        .floating-shapes {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-shapes span {
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(34, 139, 92, 0.08);
+            animation: drift linear infinite;
+        }
+
+        .floating-shapes span:nth-child(1) { width: 110px; height: 110px; left: 8%; top: 18%; animation-duration: 17s; }
+        .floating-shapes span:nth-child(2) { width: 28px; height: 28px; left: 72%; top: 12%; animation-duration: 11s; }
+        .floating-shapes span:nth-child(3) { width: 150px; height: 150px; left: 78%; top: 52%; animation-duration: 23s; }
+        .floating-shapes span:nth-child(4) { width: 42px; height: 42px; left: 22%; top: 74%; animation-duration: 12s; }
+        .floating-shapes span:nth-child(5) { width: 86px; height: 86px; left: 46%; top: 66%; animation-duration: 19s; }
+
+        @keyframes drift {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-18px) rotate(90deg); }
+            100% { transform: translateY(0) rotate(180deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .landing-shell,
+        .app-shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            width: min(1180px, calc(100% - 32px));
+            margin: 18px auto 0;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 22px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(34, 139, 92, 0.12), rgba(255, 255, 255, 0.9));
+            padding: 8px;
+            box-shadow: 0 14px 28px rgba(20, 74, 50, 0.12);
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-size: 1.28rem;
+            font-weight: 800;
+        }
+
+        .brand-copy span {
+            color: var(--text-soft);
+            font-size: 0.94rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--text-soft);
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            transform: scaleX(0);
+            transform-origin: left;
+            background: var(--mint-600);
+            transition: transform 0.25s ease;
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .topbar-actions,
+        .inline-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--mint-600), var(--mint-700));
+            color: var(--white);
+            box-shadow: 0 14px 28px rgba(34, 139, 92, 0.24);
+        }
+
+        .btn-secondary {
+            background: rgba(34, 139, 92, 0.1);
+            color: var(--mint-800);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--mint-800);
+            border: 1px solid var(--border);
+        }
+
+        .landing-shell {
+            padding: 34px 0 80px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+            gap: 28px;
+            align-items: start;
+            padding-top: 26px;
+        }
+
+        .hero-copy {
+            padding: 34px 0 12px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(34, 139, 92, 0.12);
+            color: var(--mint-800);
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        h1,
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            margin: 22px 0 18px;
+            font-size: clamp(3rem, 5vw, 5.3rem);
+            line-height: 0.92;
+            color: #102c22;
+        }
+
+        .hero-copy p {
+            margin: 0;
+            max-width: 640px;
+            color: var(--text-soft);
+            font-size: 1.08rem;
+            line-height: 1.8;
+        }
+
+        .hero-stats,
+        .trust-strip {
+            display: grid;
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .hero-stats {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .trust-strip {
+            grid-template-columns: repeat(4, 1fr);
+            margin-top: 26px;
+        }
+
+        .stat-card,
+        .glass-card,
+        .panel,
+        .mini-card,
+        .result-card,
+        .auth-card,
+        .feature-card,
+        .contact-card,
+        .search-card,
+        .app-header,
+        .status-card,
+        .insight-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: var(--shadow);
+            border-radius: 28px;
+        }
+
+        .stat-card,
+        .mini-card,
+        .feature-card,
+        .contact-card,
+        .search-card,
+        .panel,
+        .status-card,
+        .insight-card {
+            padding: 24px;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 1.75rem;
+            color: var(--mint-800);
+        }
+
+        .stat-card span,
+        .mini-card span {
+            color: var(--text-soft);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .mini-card strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--mint-800);
+        }
+
+        .hero-card {
+            position: relative;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(34, 139, 92, 0.92), rgba(12, 63, 41, 0.88));
+            z-index: 0;
+        }
+
+        .hero-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-card .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.18);
+            color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .hero-card h2 {
+            margin: 22px 0 12px;
+            color: var(--white);
+            font-size: 2rem;
+        }
+
+        .hero-card p,
+        .hero-card li {
+            color: rgba(255, 255, 255, 0.84);
+            line-height: 1.7;
+        }
+
+        .hero-card ul,
+        .panel ul {
+            margin: 18px 0 0;
+            padding-left: 18px;
+        }
+
+        .pulse-panel {
+            margin-top: 22px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .pulse-bar {
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            overflow: hidden;
+        }
+
+        .pulse-bar span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #b8f1cb, #ffffff);
+            animation: pulseWidth 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseWidth {
+            0%, 100% { width: 72%; }
+            50% { width: 93%; }
+        }
+
+        .section {
+            margin-top: 72px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: end;
+            margin-bottom: 24px;
+        }
+
+        .section-head p {
+            max-width: 520px;
+            color: var(--text-soft);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .section-title {
+            font-size: clamp(2.3rem, 3vw, 3.4rem);
+            margin: 0;
+        }
+
+        .feature-grid,
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .icon-chip {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: inline-grid;
+            place-items: center;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, rgba(34, 139, 92, 0.16), rgba(34, 139, 92, 0.05));
+            color: var(--mint-800);
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .feature-card h3,
+        .contact-card h3,
+        .search-card h3,
+        .panel h3,
+        .status-card h3,
+        .insight-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.18rem;
+        }
+
+        .feature-card p,
+        .contact-card p,
+        .panel p,
+        .status-card p,
+        .insight-card p {
+            margin: 0;
+            color: var(--text-soft);
+            line-height: 1.7;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            margin-left: auto;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: var(--shadow);
+            border-radius: 28px;
+        }
+
+        .hero-auth {
+            align-self: stretch;
+            width: 100%;
+        }
+
+        .auth-main {
+            padding: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 244, 0.96));
+        }
+
+        .auth-top {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .auth-tabs {
+            display: inline-flex;
+            padding: 6px;
+            border-radius: 999px;
+            background: rgba(34, 139, 92, 0.08);
+            width: fit-content;
+            justify-self: start;
+        }
+
+        .auth-tab {
+            border: 0;
+            background: transparent;
+            color: var(--text-soft);
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .auth-tab.active {
+            background: rgba(255, 255, 255, 0.98);
+            color: var(--mint-800);
+            box-shadow: 0 8px 18px rgba(20, 74, 50, 0.08);
+        }
+
+        .auth-title {
+            margin: 0;
+            color: var(--mint-900);
+            font-size: 1.95rem;
+            line-height: 1.05;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .auth-subtitle {
+            margin: 0;
+            color: var(--text-soft);
+            line-height: 1.7;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--mint-800);
+        }
+
+        .field input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(22, 103, 70, 0.14);
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text-strong);
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .field input:focus,
+        .search-bar input:focus {
+            border-color: rgba(34, 139, 92, 0.48);
+            box-shadow: 0 0 0 4px rgba(34, 139, 92, 0.1);
+        }
+
+        .form-note {
+            margin: 4px 0 18px;
+            color: var(--text-soft);
+            font-size: 0.93rem;
+        }
+
+        .feedback {
+            display: none;
+            margin-bottom: 16px;
+            padding: 13px 16px;
+            border-radius: 16px;
+            font-weight: 600;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.success {
+            background: rgba(29, 143, 82, 0.12);
+            color: var(--success);
+        }
+
+        .feedback.error {
+            background: rgba(196, 91, 83, 0.12);
+            color: var(--danger);
+        }
+
+        .auth-help {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin: 12px 0 0;
+            color: var(--text-soft);
+            font-size: 0.92rem;
+        }
+
+        .auth-switch {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: var(--mint-700);
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .app-shell {
+            display: none;
+            padding: 22px 0 42px;
+        }
+
+        .app-shell.show {
+            display: block;
+        }
+
+        .app-header {
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .welcome-copy span {
+            display: block;
+            color: var(--text-soft);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .welcome-copy h2 {
+            margin: 0;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .app-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-pill,
+        .result-type {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(34, 139, 92, 0.1);
+            color: var(--mint-800);
+            font-weight: 800;
+            font-size: 0.84rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .dashboard-grid {
+            display: block;
+            margin-top: 18px;
+        }
+
+        .search-bar {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .search-bar input {
+            min-width: 0;
+            padding: 16px 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(22, 103, 70, 0.15);
+            background: rgba(250, 255, 252, 0.95);
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .tag {
+            border: 1px solid var(--border);
+            background: rgba(34, 139, 92, 0.08);
+            color: var(--mint-800);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .results-wrap {
+            margin-top: 18px;
+            min-height: 150px;
+        }
+
+        .result-card {
+            padding: 24px;
+        }
+
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 18px;
+        }
+
+        .result-head h2 {
+            margin: 0;
+            font-size: 1.7rem;
+        }
+
+        .info-block {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(22, 103, 70, 0.1);
+        }
+
+        .info-block h4 {
+            margin: 0 0 8px;
+            color: var(--mint-800);
+            font-size: 0.98rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-block p,
+        .info-block ul,
+        .info-block div {
+            margin: 0;
+            color: var(--text-strong);
+            line-height: 1.8;
+        }
+
+        .info-block ul {
+            padding-left: 18px;
+        }
+
+        .quick-grid,
+        .insight-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .insight-list {
+            margin-top: 16px;
+            gap: 12px;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(34, 139, 92, 0.06);
+            border-radius: 18px;
+        }
+
+        .insight-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .portal-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 14px 20px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--mint-600), var(--mint-700));
+            color: var(--white);
+            font-weight: 800;
+            box-shadow: 0 14px 28px rgba(34, 139, 92, 0.22);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+        }
+
+        .portal-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 34px rgba(34, 139, 92, 0.28);
+            filter: saturate(1.05);
+        }
+
+        .loader {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--mint-800);
+            font-weight: 700;
+        }
+
+        .loader::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 3px solid rgba(34, 139, 92, 0.18);
+            border-top-color: var(--mint-700);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            text-align: center;
+            color: var(--text-soft);
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 1024px) {
+            .hero,
+            .dashboard-grid,
+            .dashboard-sections,
+            .feature-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-strip,
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar {
+                width: min(100%, calc(100% - 20px));
+                padding: 12px 14px;
+                border-radius: 18px;
+            }
+
+            .landing-shell,
+            .app-shell {
+                width: min(100%, calc(100% - 20px));
+            }
+
+            .hero-copy {
+                padding-top: 20px;
+            }
+
+            .search-bar,
+            .form-grid,
+            .trust-strip,
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-main,
+            .app-header,
+            .hero-card,
+            .auth-card {
+                padding: 22px;
+            }
+
+            .auth-card {
+                max-width: 100%;
+            }
+
+            .auth-main {
+                padding: 22px;
+            }
+
+            .section-head,
+            .app-header {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .topbar-actions .btn-secondary {
+                display: none;
+            }
+
+            .auth-help {
+                flex-direction: column;
+                align-items: start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <div class="floating-shapes" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <header class="topbar">
+            <a class="brand" href="#top" id="brandHome">
+                <img src="images/logo.png" alt="Medicate logo">
+                <div class="brand-copy">
+                    <strong>Medicate</strong>
+                    <span>Smart medical guidance portal</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="#features">Services</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Support</a>
+            </nav>
+            <div class="topbar-actions">
+                <button class="btn btn-secondary" type="button" id="navSignupBtn">Create Account</button>
+                <button class="btn btn-primary" type="button" id="navLoginBtn">Login Portal</button>
+            </div>
+        </header>
+
+        <main id="landingView" class="landing-shell">
+            <section class="hero" id="top">
+                <div class="hero-copy">
+                    <span class="eyebrow">24/7 medical-inspired digital care experience</span>
+                    <h1>Trusted health guidance with Medicate in one smooth landing page.</h1>
+                    <p>Search medicines, understand diseases, aur right side me hi direct login ya signup karo. Account create hote hi credentials server ki file me save ho jayenge, isliye server dubara start karne ke baad bhi same ID se login ho jayega.</p>
+                    <div class="inline-actions" style="margin-top: 28px;">
+                        <button class="btn btn-primary" type="button" id="heroSignupBtn">Start Secure Access</button>
+                        <button class="btn btn-ghost" type="button" id="scrollToFeatures">Explore Website</button>
+                    </div>
+                    <div class="hero-stats">
+                        <article class="stat-card"><strong>Medicine</strong><span>Fast search with a cleaner clinical dashboard</span></article>
+                        <article class="stat-card"><strong>Saved Login</strong><span>Signup credentials server-side JSON file me persist honge</span></article>
+                        <article class="stat-card"><strong>Medical UI</strong><span>Premium green-white healthcare website vibe</span></article>
+                    </div>
+                </div>
+
+                <aside class="hero-auth">
+                    <div class="auth-card">
+                        <section class="auth-main">
+                            <div class="auth-top">
+                                <div class="auth-tabs">
+                                    <button class="auth-tab active" type="button" data-auth-tab="login">Login</button>
+                                    <button class="auth-tab" type="button" data-auth-tab="signup">Sign Up</button>
+                                </div>
+                                <h2 class="auth-title">Access Your Medicate Account</h2>
+                                <p class="auth-subtitle">Landing page se hi direct login ya signup karo. Server restart ke baad bhi same account chalega.</p>
+                            </div>
+
+                            <div class="feedback" id="authFeedback"></div>
+
+                            <form class="auth-form active" id="loginForm">
+                                <div class="field">
+                                    <label for="loginEmail">Email Address</label>
+                                    <input id="loginEmail" name="email" type="email" placeholder="Enter your registered email" required>
+                                </div>
+                                <div class="field">
+                                    <label for="loginPassword">Password</label>
+                                    <input id="loginPassword" name="password" type="password" placeholder="Enter your password" required>
+                                </div>
+                                <p class="form-note">Login direct backend file-based credentials se verify hoga.</p>
+                                <button class="btn btn-primary" type="submit" style="width: 100%;">Login to Dashboard</button>
+                                <div class="auth-help">
+                                    <span>New here?</span>
+                                    <button class="auth-switch" type="button" data-switch-auth="signup">Create account</button>
+                                </div>
+                            </form>
+
+                            <form class="auth-form" id="signupForm">
+                                <div class="form-grid">
+                                    <div class="field">
+                                        <label for="signupName">Full Name</label>
+                                        <input id="signupName" name="name" type="text" placeholder="Enter full name" required>
+                                    </div>
+                                    <div class="field">
+                                        <label for="signupPhone">Phone Number</label>
+                                        <input id="signupPhone" name="phone" type="tel" placeholder="Enter phone number" required>
+                                    </div>
+                                    <div class="field full">
+                                        <label for="signupEmail">Email Address</label>
+                                        <input id="signupEmail" name="email" type="email" placeholder="Enter email address" required>
+                                    </div>
+                                    <div class="field">
+                                        <label for="signupPassword">Password</label>
+                                        <input id="signupPassword" name="password" type="password" placeholder="Minimum 6 characters" required>
+                                    </div>
+                                    <div class="field">
+                                        <label for="signupConfirmPassword">Confirm Password</label>
+                                        <input id="signupConfirmPassword" name="confirmPassword" type="password" placeholder="Re-enter password" required>
+                                    </div>
+                                </div>
+                                <p class="form-note">Signup ke baad ID/password `data/users.json` me save honge aur aap automatically dashboard par aa jaoge.</p>
+                                <button class="btn btn-primary" type="submit" style="width: 100%;">Create Account</button>
+                                <div class="auth-help">
+                                    <span>Already registered?</span>
+                                    <button class="auth-switch" type="button" data-switch-auth="login">Go to login</button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="trust-strip">
+                <article class="mini-card"><strong>Clinical Layout</strong><span>Soft gradients, calm spacing, and clear medical hierarchy.</span></article>
+                <article class="mini-card"><strong>Smart Search</strong><span>Existing `/api/search` flow kept intact and elevated visually.</span></article>
+                <article class="mini-card"><strong>Personal Access</strong><span>Users can sign up once and login later with the same saved credentials.</span></article>
+                <article class="mini-card"><strong>Wellness Panels</strong><span>Added supportive healthcare cards for a fuller website feel.</span></article>
+            </section>
+
+            <section class="section" id="features">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">Core Services</p>
+                        <h2 class="section-title">A stronger medical landing experience</h2>
+                    </div>
+                    <p>The landing page now feels like a real healthcare product entry point instead of a basic search page.</p>
+                </div>
+                <div class="feature-grid">
+                    <article class="feature-card"><div class="icon-chip">+</div><h3>Medicine Finder</h3><p>Search drugs, brands, and conditions in a much cleaner medical interface after login.</p></article>
+                    <article class="feature-card"><div class="icon-chip">S</div><h3>Secure Local Portal</h3><p>Signup and login ab server-side JSON file ke through persist hote hain, isliye restart ke baad bhi account rehta hai.</p></article>
+                    <article class="feature-card"><div class="icon-chip">C</div><h3>Care-First Visuals</h3><p>Greenish-white palette, premium cards, and supportive medical content blocks throughout the site.</p></article>
+                </div>
+            </section>
+
+            <section class="section" id="experience">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">Portal Experience</p>
+                        <h2 class="section-title">Designed to feel like a modern private clinic portal</h2>
+                    </div>
+                    <p>Clean sections, soft shadows, crisp type, and confident call-to-actions create that full medical website vibe you asked for.</p>
+                </div>
+                <div class="feature-grid">
+                    <article class="feature-card"><div class="icon-chip">1</div><h3>Quick Onboarding</h3><p>Create an account in seconds and land directly inside the dashboard.</p></article>
+                    <article class="feature-card"><div class="icon-chip">2</div><h3>Result Clarity</h3><p>Search results are now structured into clean sections for better scanning and readability.</p></article>
+                    <article class="feature-card"><div class="icon-chip">3</div><h3>Healthcare Atmosphere</h3><p>Soft whites, mint greens, and trust-building layout blocks improve the whole frontend feel.</p></article>
+                </div>
+            </section>
+
+            <section class="section" id="contact">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">Reach & Support</p>
+                        <h2 class="section-title">Support blocks that complete the website</h2>
+                    </div>
+                    <p>Contact-style panels are still available so the site feels complete even before the user logs in.</p>
+                </div>
+                <div class="contact-grid">
+                    <article class="contact-card"><div class="icon-chip">@</div><h3>Email Desk</h3><p><a href="mailto:aadi100right@gmail.com">aadi100right@gmail.com</a></p></article>
+                    <article class="contact-card"><div class="icon-chip">+</div><h3>Phone Support</h3><p><a href="tel:+919760033318">+91 9760033318</a></p></article>
+                    <article class="contact-card"><div class="icon-chip">24</div><h3>Patient-Friendly</h3><p>Clear clinical visuals, low-friction navigation, and a warmer care-oriented tone.</p></article>
+                </div>
+            </section>
+
+            <p class="footer-note">This portal is for educational assistance and UI demonstration. For treatment decisions, always consult a qualified medical professional.</p>
+        </main>
+
+        <main id="appView" class="app-shell" aria-live="polite">
+            <section class="app-header">
+                <div class="welcome-copy">
+                    <span id="welcomeLine">Welcome back</span>
+                    <h2 id="welcomeTitle">Your care dashboard</h2>
+                </div>
+                <div class="app-meta">
+                    <span class="status-pill">Care portal active</span>
+                    <button class="btn btn-ghost" type="button" id="logoutBtn">Logout</button>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="search-card">
+                    <span class="eyebrow">Main Search Portal</span>
+                    <h3>Search medicines, drugs, and diseases</h3>
+                    <p>Use the same backend search endpoint, now wrapped in a richer medical dashboard experience.</p>
+
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Try: paracetamol, amoxicillin, diabetes, dengue">
+                        <button class="btn btn-primary" type="button" id="searchBtn">Search Now</button>
+                    </div>
+
+                    <div class="search-tags">
+                        <button class="tag" type="button" data-query="Paracetamol">Paracetamol</button>
+                        <button class="tag" type="button" data-query="Amoxicillin">Amoxicillin</button>
+                        <button class="tag" type="button" data-query="Diabetes">Diabetes</button>
+                        <button class="tag" type="button" data-query="Migraine">Migraine</button>
+                    </div>
+
+                    <div class="results-wrap" id="result">
+                        <div class="result-card">
+                            <div class="result-head">
+                                <div>
+                                    <h2>Ready for your first search</h2>
+                                    <p style="margin: 8px 0 0; color: var(--text-soft);">Login successful. Search any medicine or disease to view details here.</p>
+                                </div>
+                                <span class="result-type">Portal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-sections">
+                <article class="panel">
+                    <span class="eyebrow">Why This Dashboard</span>
+                    <h3>Improved frontend without touching the backend</h3>
+                    <p>The search system still works through your existing `/api/search` route. Saath me file-based auth add ki gayi hai taaki poori site usable bhi ho aur premium medical website jaisi bhi lage.</p>
+                    <ul>
+                        <li>Landing page me embedded login and signup panel</li>
+                        <li>Session restore when the same user revisits</li>
+                        <li>Cleaner result formatting for medicine or disease searches</li>
+                    </ul>
+                </article>
+
+                <article class="panel">
+                    <span class="eyebrow">Medical Support</span>
+                    <h3>Helpful patient-style guidance</h3>
+                    <p>Keep this portal as a guidance layer, but always pair medicine information with a doctor's advice, especially for diagnosis, dosing, and ongoing treatment plans.</p>
+                    <a class="portal-link" href="https://www.1mg.com/" target="_blank" rel="noopener noreferrer">Open medicine marketplace</a>
+                </article>
+            </section>
+        </main>
+
+    </div>
+    <script>
+        const STORAGE_KEYS = {
+            session: 'medicate_session'
+        };
+
+        const landingView = document.getElementById('landingView');
+        const appView = document.getElementById('appView');
+        const authFeedback = document.getElementById('authFeedback');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        const welcomeLine = document.getElementById('welcomeLine');
+        const welcomeTitle = document.getElementById('welcomeTitle');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultDiv = document.getElementById('result');
+
+        function getSession() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEYS.session)) || null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function setSession(user) {
+            localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({
+                name: user.name,
+                email: user.email,
+                phone: user.phone || ''
+            }));
+        }
+
+        function clearSession() {
+            localStorage.removeItem(STORAGE_KEYS.session);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function setFeedback(message, type) {
+            authFeedback.textContent = message;
+            authFeedback.className = `feedback show ${type}`;
+        }
+
+        function clearFeedback() {
+            authFeedback.textContent = '';
+            authFeedback.className = 'feedback';
+        }
+
+        function switchAuthTab(tab) {
+            authTabs.forEach((button) => {
+                button.classList.toggle('active', button.dataset.authTab === tab);
+            });
+
+            authForms.forEach((form) => {
+                const isTarget = form.id === `${tab}Form`;
+                form.classList.toggle('active', isTarget);
+            });
+
+            clearFeedback();
+        }
+
+        function showApp(user) {
+            landingView.classList.add('hidden');
+            appView.classList.add('show');
+            welcomeLine.textContent = `Logged in as ${user.email}`;
+            welcomeTitle.textContent = `${user.name.split(' ')[0]}'s care dashboard`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showLanding() {
+            appView.classList.remove('show');
+            landingView.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDefaultResult(message) {
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <div class="result-head">
+                        <div>
+                            <h2>${message.title}</h2>
+                            <p style="margin: 8px 0 0; color: var(--text-soft);">${message.body}</p>
+                        </div>
+                        <span class="result-type">${message.label}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayResults(data, query) {
+            if (data.type === 'NotFound') {
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-head">
+                            <div>
+                                <h2>Information not found</h2>
+                                <p style="margin: 8px 0 0; color: var(--text-soft);">${escapeHtml(data.summary || 'No matching record was found.')}</p>
+                            </div>
+                            <span class="result-type">No Match</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const typeDisplay = data.source === 'Gemini AI' ? 'AI Insight' : data.type;
+            let html = `
+                <div class="result-card">
+                    <div class="result-head">
+                        <div>
+                            <h2>${escapeHtml(data.name || query)}</h2>
+                            <p style="margin: 8px 0 0; color: var(--text-soft);">Search details prepared for "${escapeHtml(query)}"</p>
+                        </div>
+                        <span class="result-type">${escapeHtml(typeDisplay || 'Result')}</span>
+                    </div>
+            `;
+
+            if (data.source === 'Gemini AI') {
+                html += `
+                    <div class="info-block">
+                        <h4>Summary</h4>
+                        <div>${data.summary || '<p>No summary available.</p>'}</div>
+                    </div>
+                `;
+            } else if (data.type === 'Drug') {
+                html += `
+                    <div class="info-block">
+                        <h4>Summary</h4>
+                        <p>${escapeHtml(data.summary || 'No summary available.')}</p>
+                    </div>
+                    <div class="info-block">
+                        <h4>Active Ingredient(s)</h4>
+                        <ul>${(data.ingredients || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('') || '<li>Not available.</li>'}</ul>
+                    </div>
+                    <div class="info-block">
+                        <h4>Manufacturer</h4>
+                        <p>${escapeHtml(data.manufacturer || 'Not available.')}</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="info-block">
+                        <h4>Summary</h4>
+                        <div>${data.summary || '<p>No summary available.</p>'}</div>
+                    </div>
+                    <div class="info-block">
+                        <h4>Clinical Note</h4>
+                        <p>This information is for learning and support only. Diagnosis and treatment should come from a qualified healthcare professional.</p>
+                    </div>
+                `;
+            }
+
+            html += `
+                    <a class="portal-link" href="https://www.1mg.com/search/all?name=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer">Find related options on 1mg</a>
+                </div>
+            `;
+            resultDiv.innerHTML = html;
+        }
+
+        async function search() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                renderDefaultResult({
+                    title: 'Search field is empty',
+                    body: 'Please enter a medicine, drug, or disease name to continue.',
+                    label: 'Required'
+                });
+                return;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <div class="loader">Searching medical records for "${escapeHtml(query)}"</div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Server returned an error');
+                }
+
+                const data = await response.json();
+                displayResults(data, query);
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-head">
+                            <div>
+                                <h2>Search unavailable</h2>
+                                <p style="margin: 8px 0 0; color: var(--text-soft);">We could not fetch data from the server right now. Please check whether the backend is running.</p>
+                            </div>
+                            <span class="result-type">Error</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearFeedback();
+
+            const formData = new FormData(loginForm);
+            const email = String(formData.get('email') || '').trim().toLowerCase();
+            const password = String(formData.get('password') || '');
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed.');
+                }
+
+                setSession(data.user);
+                loginForm.reset();
+                showApp(data.user);
+            } catch (error) {
+                setFeedback(error.message || 'Invalid email or password. Please try again.', 'error');
+            }
+        });
+
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearFeedback();
+
+            const formData = new FormData(signupForm);
+            const user = {
+                name: String(formData.get('name') || '').trim(),
+                phone: String(formData.get('phone') || '').trim(),
+                email: String(formData.get('email') || '').trim().toLowerCase(),
+                password: String(formData.get('password') || '')
+            };
+            const confirmPassword = String(formData.get('confirmPassword') || '');
+
+            if (!user.name || !user.phone || !user.email || !user.password) {
+                setFeedback('Please fill all signup fields before continuing.', 'error');
+                return;
+            }
+
+            if (user.password.length < 6) {
+                setFeedback('Password should be at least 6 characters long.', 'error');
+                return;
+            }
+
+            if (user.password !== confirmPassword) {
+                setFeedback('Password and confirm password do not match.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Signup failed.');
+                }
+
+                setSession(data.user);
+                signupForm.reset();
+                setFeedback('Account created successfully. Redirecting to dashboard...', 'success');
+                setTimeout(() => showApp(data.user), 500);
+            } catch (error) {
+                setFeedback(error.message || 'Signup failed. Please try again.', 'error');
+                if ((error.message || '').toLowerCase().includes('login instead')) {
+                    switchAuthTab('login');
+                }
+            }
+        });
+
+        authTabs.forEach((button) => {
+            button.addEventListener('click', () => switchAuthTab(button.dataset.authTab));
+        });
+
+        document.querySelectorAll('[data-switch-auth]').forEach((button) => {
+            button.addEventListener('click', () => switchAuthTab(button.dataset.switchAuth));
+        });
+
+        [document.getElementById('navLoginBtn')].forEach((button) => {
+            button.addEventListener('click', () => {
+                switchAuthTab('login');
+                document.getElementById('loginEmail').focus();
+                loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+
+        [document.getElementById('navSignupBtn'), document.getElementById('heroSignupBtn')].forEach((button) => {
+            button.addEventListener('click', () => {
+                switchAuthTab('signup');
+                document.getElementById('signupName').focus();
+                signupForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            clearSession();
+            renderDefaultResult({
+                title: 'Ready for your first search',
+                body: 'Login successful. Search any medicine or disease to view details here.',
+                label: 'Portal'
+            });
+            showLanding();
+        });
+
+        document.getElementById('scrollToFeatures').addEventListener('click', () => {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        document.getElementById('brandHome').addEventListener('click', (event) => {
+            if (appView.classList.contains('show')) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        document.querySelectorAll('[data-query]').forEach((button) => {
+            button.addEventListener('click', () => {
+                searchInput.value = button.dataset.query;
+                search();
+            });
+        });
+
+        searchBtn.addEventListener('click', search);
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                search();
+            }
+        });
+
+        const activeSession = getSession();
+        if (activeSession) {
+            showApp(activeSession);
+        }
+    </script>
+</body>
+</html>
